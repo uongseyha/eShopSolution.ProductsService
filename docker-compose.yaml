@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+ mysql-container:
+  image: mysql:8.3.0
+  environment:
+   - MYSQL_ROOT_PASSWORD=root
+  ports:
+   - "3307:3308"
+  volumes:
+   - ./seed/mysql-init:/docker-entrypoint-initdb.d
+  networks:
+   - eshop-network
+  hostname: mysql-host-productsmicroservice
+
+ products-microservice:
+  image: seyhauong/eshop-products-microservice:v1.0
+  environment:
+   MYSQL_HOST: mysql-host-productsmicroservice
+   MYSQL_PASSWORD: root
+  ports:
+   - "8080:8080"
+  networks:
+   - eshop-network
+
+ postgres-container:
+  image: postgres:16.1
+  environment:
+   - POSTGRES_USER=postgres
+   - POSTGRES_PASSWORD=admin
+   - POSTGRES_DB=eCommerceUsers
+  ports:
+   - "5432:5432"
+  volumes:
+   - ./seed/postgres-init:/docker-entrypoint-initdb.d
+  networks:
+   - eshop-network
+
+ users-microservice:
+  image: seyhauong/eshop-users-microservice:v1.0
+  environment:
+   - POSTGRES_HOST=postgres-container
+   - POSTGRES_PASSWORD=admin
+  ports:
+   - "9090:9090"
+  networks:
+   - eshop-network
+
+networks:
+ eshop-network:
+  driver: bridge
