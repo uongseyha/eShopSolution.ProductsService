@@ -1,4 +1,5 @@
-﻿using eShop.BusinessLogicLayer.Mappers;
+﻿using eCommerce.ProductsService.BusinessLogicLayer.RabbitMQ;
+using eShop.BusinessLogicLayer.Mappers;
 using eShop.BusinessLogicLayer.ServiceContracts;
 using eShop.BusinessLogicLayer.Validators;
 using FluentValidation;
@@ -15,6 +16,7 @@ namespace eShop.ProductsService.BusinessLogicLayer
       services.AddAutoMapper(typeof(ProductAddRequestToProductMappingProfile).Assembly);
       services.AddValidatorsFromAssemblyContaining<ProductAddRequestValidator>(); 
       services.AddScoped<IProductsService, eShop.BusinessLogicLayer.Services.ProductsService>();
+      services.AddTransient<IRabbitMQPublisher, RabbitMQPublisher>();
       return services;
     }
   }
